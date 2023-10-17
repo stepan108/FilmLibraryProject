@@ -1,0 +1,19 @@
+#docker-compose up
+version: "3.9"
+services:
+  postgres:
+    container_name: localPostgresSQLDBFilmLibrary
+    image: postgres
+    environment:
+      POSTGRES_DB: "filmlibrary_db"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "12345"
+    ports:
+      - "5432:5432"
+    networks:
+      java16-network:
+        aliases:
+          - java16db
+networks:
+  java16-network:
+    name: 'our_java16_network'

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout}"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Просмотр фильма</title>
+</head>
+<body>
+<form layout:fragment="content">
+    <div>
+        <h3 th:text="'Информация о фильме: ' + ${film.getFilmTitle()}"></h3>
+        <form class="row g-1">
+            <div class="mb-2 row">
+                <label for="filmTitle" class="col-sm-2 col-form-label no-border">Название:</label>
+                <div class="col-sm-10">
+                    <p th:text="${film.getFilmTitle()}" type="text" readonly class="form-control-plaintext"
+                       id="filmTitle">
+                </div>
+            </div>
+            <div class="mb-2 row">
+                <label for="genre" class="col-sm-2 col-form-label">Жанр:</label>
+                <div class="col-sm-10">
+                    <p th:text="${film.getGenre().getGenreTextDisplay()}" class="form-control-plaintext" id="genre">
+                </div>
+            </div>
+            <div class="mb-2 row">
+                <label class="col-sm-2 col-form-label">Онлайн копия:</label>
+                <div class="col-sm-10">
+                    <a class="text-link text-blue" th:if="${film.getOnlineCopyPath()} != null"
+                       th:href="@{|/films/download?filmId=${film.id}|}">
+                        <span>Скачать фильм</span>
+                    </a>
+                </div>
+            </div>
+            <div class="mb-2 row">
+                <label for="minLength" class="col-sm-2 col-form-label">Продолжительность:</label>
+                <div class="col-sm-10">
+                    <p th:text="${film.getMinLength()}" class="form-control-plaintext" id="minLength">
+                </div>
+            </div>
+            <div class="mb-2 row">
+                <label for="country" class="col-sm-2 col-form-label">Страна:</label>
+                <div class="col-sm-10">
+                    <p th:text="${film.getCountry()}" class="form-control-plaintext" id="country">
+                </div>
+            </div>
+            <div class="mb-2 row">
+                <label for="premierYear" class="col-sm-2 col-form-label">Премьера:</label>
+                <div class="col-sm-10">
+                    <p th:text="${film.getPremierYear()}" class="form-control-plaintext" id="premierYear">
+                </div>
+            </div>
+            <div class="mb-2 row">
+                <label for="description" class="col-sm-2 col-form-label">Описание:</label>
+                <div class="col-sm-10">
+                    <p th:text="${film.getDescription()}" class="form-control-plaintext" id="description">
+                </div>
+            </div>
+        </form>
+        <hr class="hr"/>
+        <div class="mt-2">
+            <form method="POST" th:object="${filmSearchForm}" th:action="@{/directors/search/directorsByFilm}">
+                <a sec:authorize="isAuthenticated() && !hasRole('USER')" class="btn btn-primary"
+                   th:href="'/films/add-director/' + ${film.getId()}">Добавить режиссера</a>
+                <input type="hidden" name="filmTitle"
+                       th:value="${film.getFilmTitle()}">
+                <button type="submit" class="btn btn-success">Посмотреть режиссеров</button>
+                <button type="button" class="btn btn-secondary" onclick="window.history.back()">Назад</button>
+            </form>
+        </div>
+        <hr class="hr"/>
+        <div class="mt-2">
+            <a sec:authorize="!hasRole('ADMIN')" class="btn btn-primary"
+               th:href="'/rent/film/' + ${film.id}">Арендовать фильм
+            </a>
+            <button type="button" class="btn btn-secondary" onclick="window.history.back()">Назад</button>
+        </div>
+    </div>
+</form>
+</body>
+</html>
